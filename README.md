@@ -14,6 +14,7 @@ Store the following configuration in text file with the name template:
 
 !
 interface FastEthernet 0/0
+
  ip address {{ ip_address }} {{ network_mask }}
  no shutdown
 ! 
