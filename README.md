@@ -11,13 +11,13 @@ Template must be in text format and all variables should be in format {{ variabl
 ## Example
 
 Store the following configuration in text file with the name template:
-`
+
 !
 interface FastEthernet 0/0
  ip address {{ ip_address }} {{ network_mask }}
  no shutdown
 ! 
-`
+
 
 Run program with -t option:
 
