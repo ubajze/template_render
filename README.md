@@ -28,9 +28,9 @@ Program will ask you to enter values for ip_address and network_mask variable, f
 
 The program will generate the following text output:
 `
-!
+
 interface FastEthernet 0/0
  ip address 192.168.1.1 255.255.255.0
  no shutdown
-!
+
 `
