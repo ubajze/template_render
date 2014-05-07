@@ -3,6 +3,14 @@ import argparse
 import re
 
 
+"""
+Configuration parameters
+"""
+
+save_to_file = False
+
+
+
 def get_text_file(template,variables):
 
     """
@@ -51,23 +59,41 @@ def get_input_from_command_line(template_variables):
 def parse_command_line_arguments():
 
     """
-    The function is used to provide argument parsing when function is called from the command line.
+    The function is used to provide argument parsing when function is called from the command line. The function returns command line arguments dictionary.
     """
 
     parser = argparse.ArgumentParser(description='Generate text file from template', epilog='all variables in template file must be in the form {{ variable }}')
-    parser.add_argument('-t', '--temp', help='path to the template file', required=True, type=file, metavar='FILE')
+    parser.add_argument('-t', '--temp', help='template file', required=True, type=file, metavar='FILE')
     parser.add_argument('-v', '--version', help='display version', action='version', version='%(prog)s 0.1')
+    parser.add_argument('-o', '--out', help='save to output file', type=argparse.FileType('w'), metavar='OUTPUT_FILE')
     args = parser.parse_args()
-    return vars(args)['temp'].read()
+
+    cli_arguments = {}
+    cli_arguments['template_content'] = vars(args)['temp'].read()
+    vars(args)['temp'].close()
+    print vars(args)['out']
+    if vars(args)['out'] == None:
+        cli_arguments['output'] = [False, vars(args)['out']]
+    else:
+        cli_arguments['output'] = [True, vars(args)['out']]
+    return cli_arguments
+
+
+
 
 
 if __name__ == "__main__":
 
     try:
-        template_file = parse_command_line_arguments()
+        command_line_parameters = parse_command_line_arguments()
+        template_file = command_line_parameters['template_content']
         template_variables = get_variables_from_template(template_file)
         variable_values = get_input_from_command_line(template_variables)
-        print get_text_file(template_file,variable_values)
+        if command_line_parameters['output'][0]:
+            command_line_parameters['output'][1].write(get_text_file(template_file,variable_values))
+            command_line_parameters['output'][1].close()
+        else:
+            print get_text_file(template_file,variable_values)
        
     except KeyboardInterrupt:
         print "\nProgram was interrupted by user"
